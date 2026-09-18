@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project: SKU generator</title>
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <nav>
+    <a href="index.html">Home</a><br>
+    <a href="about.html">About</a><br>
+    <a href="skills-test.html">Skills Test</a>
+
+</nav>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #294f88;
+            color: #333;
+            min-height: 100vh;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            height: 34px;
+            background: #09294b;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 14px;
+            font-size: 10px;
+        }
+
+        .brand {
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 18px;
+            color: #c7d0dc;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav-item.active {
+            color: white;
+        }
+
+        /* MAIN AREA */
+        .main {
+            min-height: calc(100vh - 67px);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 26px;
+        }
+
+        /* CARD */
+        .card {
+            width: 368px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.22);
+        }
+
+        /* CARD HEADER */
+        .card-header {
+            height: 71px;
+            background: linear-gradient(110deg, #087cf5, #6115f5);
+            color: white;
+            text-align: center;
+            padding-top: 10px;
+        }
+
+        .barcode-icon {
+            font-size: 20px;
+            margin-bottom: 3px;
+        }
+
+        .card-header h1 {
+            margin: 0;
+            font-size: 17px;
+            font-weight: 500;
+        }
+
+        /* FORM */
+        .form-area {
+            padding: 13px 14px 24px;
+        }
+
+        .form-group {
+            margin-bottom: 8px;
+        }
+
+        label {
+            display: block;
+            font-size: 10px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        label i {
+            margin-right: 5px;
+            font-size: 9px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            height: 23px;
+            border: 1px solid #e1e1e1;
+            border-radius: 4px;
+            padding: 0 8px;
+            font-size: 10px;
+            color: #555;
+            background: white;
+            outline: none;
+        }
+
+        input::placeholder {
+            color: #aaa;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #6099e8;
+            box-shadow: 0 0 2px rgba(40, 120, 220, 0.25);
+        }
+
+        /* BUTTON */
+        .generate-btn {
+            width: 100%;
+            height: 27px;
+            border: none;
+            border-radius: 5px;
+            margin-top: 5px;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            background: linear-gradient(90deg, #5a9bf1, #a14de9);
+            transition: 0.2s;
+        }
+
+        .generate-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        /* RESULT */
+        .divider {
+            border: none;
+            border-top: 1px solid #ddd;
+            margin: 14px 0 13px;
+        }
+
+        .result {
+            text-align: center;
+            min-height: 29px;
+        }
+
+        .result-message {
+            color: #777;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .sku {
+            color: #174e91;
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-top: 2px;
+        }
+
+        .error {
+            color: #d9534f;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        /* FOOTER */
+        footer {
+            height: 33px;
+            background: #09294b;
+            color: #cbd5df;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+
+        footer i {
+            margin-right: 5px;
+        }
+
+        /* MOBILE */
+        @media (max-width: 450px) {
+            .card {
+                width: calc(100% - 30px);
+            }
+
+            .main {
+                padding-top: 20px;
+            }
+
+            .nav-links {
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVIGATION -->
+    <nav class="navbar">
+        <div class="brand">Skewer</div>
+
+        <div class="nav-links">
+            <div class="nav-item active">
+                <i class="fa-solid fa-barcode"></i>
+                SKU Generator
+            </div>
+
+            <div class="nav-item">
+                <i class="fa-solid fa-circle-info"></i>
+                Receipt Generator
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+        <div class="card">
+
+            <!-- HEADER -->
+            <div class="card-header">
+                <div class="barcode-icon">
+                    <i class="fa-solid fa-barcode"></i>
+                </div>
+
+                <h1>SKU Generator</h1>
+            </div>
+
+            <!-- FORM -->
+            <div class="form-area">
+
+                <div class="form-group">
+                    <label for="category">
+                        <i class="fa-solid fa-tag"></i>
+                        Category
+                    </label>
+
+                    <select id="category">
+                        <option value="PER">Perishables</option>
+                        <option value="NON">Non-Perishables</option>
+                        <option value="BEV">Beverages</option>
+                        <option value="SNK">Snacks</option>
+                        <option value="OTH">Others</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="productName">
+                        <i class="fa-solid fa-box"></i>
+                        Product Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="productName"
+                        placeholder="e.g. Bottled Water"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="stockQuantity">
+                        <i class="fa-solid fa-layer-group"></i>
+                        Stock Quantity
+                    </label>
+
+                    <input
+                        type="number"
+                        id="stockQuantity"
+                        placeholder="e.g. 50"
+                        min="1"
+                    >
+                </div>
+
+                <button class="generate-btn" onclick="generateSKU()">
+                    Generate SKU
+                </button>
+
+                <hr class="divider">
+
+                <div class="result" id="result">
+                    <div class="result-message">
+                        Your generated SKU will appear here.
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <i class="fa-solid fa-code"></i>
+        SKU Generator — 1st Quarter Project
+    </footer>
+
+
+    <script>
+        async function generateSKU() {
+
+            const category =
+                document.getElementById("category").value;
+
+            const productName =
+                document.getElementById("productName").value.trim();
+
+            const stockQuantity =
+                document.getElementById("stockQuantity").value;
+
+            const result =
+                document.getElementById("result");
+
+            if (productName === "" || stockQuantity === "") {
+                result.innerHTML = `
+                    <div class="error">
+                        Please complete all fields.
+                    </div>
+                `;
+                return;
+            }
+
+            if (Number(stockQuantity) < 1) {
+                result.innerHTML = `
+                    <div class="error">
+                        Stock quantity must be at least 1.
+                    </div>
+                `;
+                return;
+            }
+
+            try {
+                const response = await fetch("/generate-sku", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        category: category,
+                        product_name: productName,
+                        quantity: Number(stockQuantity)
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    result.innerHTML = `
+                        <div class="error">
+                            ${data.error}
+                        </div>
+                    `;
+                    return;
+                }
+
+                result.innerHTML = `
+                    <div class="result-message">
+                        Your generated SKU:
+                    </div>
+
+                    <div class="sku">
+                        ${data.sku}
+                    </div>
+                `;
+
+            } catch (error) {
+                result.innerHTML = `
+                    <div class="error">
+                        Unable to connect to the server.
+                    </div>
+                `;
+            }
+        }
+    </script>
+
+</body>
+</html>
